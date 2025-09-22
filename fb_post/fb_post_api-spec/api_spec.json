@@ -1,0 +1,126 @@
+{
+  "swagger": "2.0",
+  "host": "127.0.0.1:8000",
+  "basePath": "/",
+  "info": {
+    "version": "1.0.0",
+    "title": "FB Posts API",
+    "description": "API to fetch posts with comments, reactions, and replies"
+  },
+  "schemes": ["http", "https"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "securityDefinitions": {
+    "tokenAuth": {
+      "type": "apiKey",
+      "name": "token",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "user_id": { "type": "integer" },
+        "username": { "type": "string" },
+        "profile_pic": { "type": "string" }
+      },
+      "required": ["user_id", "username"]
+    },
+    "Group": {
+      "type": "object",
+      "properties": {
+        "group_id": { "type": "integer" },
+        "name": { "type": "string" }
+      },
+      "required": ["group_id", "name"]
+    },
+    "Reaction": {
+      "type": "object",
+      "properties": {
+        "count": { "type": "integer" },
+        "type": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "required": ["count", "type"]
+    },
+    "Reply": {
+      "type": "object",
+      "properties": {
+        "comment_id": { "type": "integer" },
+        "commenter": { "$ref": "#/definitions/User" },
+        "commented_at": { "type": "string", "format": "date-time" },
+        "comment_content": { "type": "string" },
+        "reactions": { "$ref": "#/definitions/Reaction" }
+      },
+      "required": ["comment_id", "commenter", "commented_at", "comment_content"]
+    },
+    "Comment": {
+      "type": "object",
+      "properties": {
+        "comment_id": { "type": "integer" },
+        "commenter": { "$ref": "#/definitions/User" },
+        "commented_at": { "type": "string", "format": "date-time" },
+        "comment_content": { "type": "string" },
+        "reactions": { "$ref": "#/definitions/Reaction" },
+        "replies_count": { "type": "integer" },
+        "replies": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Reply" }
+        }
+      },
+      "required": ["comment_id", "commenter", "commented_at", "comment_content", "reactions"]
+    },
+    "Post": {
+      "type": "object",
+      "properties": {
+        "post_id": { "type": "integer" },
+        "group": { "$ref": "#/definitions/Group" },
+        "posted_by": { "$ref": "#/definitions/User" },
+        "posted_at": { "type": "string", "format": "date-time" },
+        "post_content": { "type": "string" },
+        "reactions": { "$ref": "#/definitions/Reaction" },
+        "comments_count": { "type": "integer" },
+        "comments": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Comment" }
+        }
+      },
+      "required": ["post_id", "group", "posted_by", "posted_at", "post_content", "reactions", "comments_count"]
+    }
+  },
+  "paths": {
+    "/posts/user/": {
+      "get": {
+        "summary": "Get user posts",
+        "description": "Returns all posts created by the logged-in user, including reactions, comments, and replies",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "token",
+            "description": "User access token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of user posts",
+            "schema": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/Post" }
+            }
+          },
+          "401": {
+            "description": "Unauthorized – invalid or missing token"
+          }
+        },
+        "security": [
+          { "tokenAuth": [] }
+        ]
+      }
+    }
+  }
+}

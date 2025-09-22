@@ -1,0 +1,80 @@
+{
+  "swagger": "2.0",
+  "host": "127.0.0.1:8000",
+  "basePath": "/auth/",
+  "info": {
+    "version": "1.0.0",
+    "title": "FB Authentication API",
+    "description": "API to register users and get user info"
+  },
+  "schemes": ["http", "https"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "securityDefinitions": {
+    "tokenAuth": {
+      "type": "apiKey",
+      "name": "token",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "RegisterUserRequest": {
+      "type": "object",
+      "properties": {
+        "username": { "type": "string" },
+        "password": { "type": "string" }
+      },
+      "required": ["username", "password"]
+    },
+    "RegisterUserResponse": {
+      "type": "object",
+      "properties": {
+        "access_token": { "type": "string" },
+        "message": { "type": "string" }
+      },
+      "required": ["access_token", "message"]
+    },
+    "GetUserRequest": {
+      "type": "object",
+      "properties": {
+        "token": { "type": "string" }
+      },
+      "required": ["token"]
+    },
+    "GetUserResponse": {
+      "type": "object",
+      "properties": {
+        "user_id": { "type": "integer" },
+        "username": { "type": "string" },
+        "created_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["user_id", "username", "created_at"]
+    }
+  },
+  "paths": {
+    "/register/": {
+      "post": {
+        "summary": "Register user",
+        "description": "Registers a new user and returns an access token",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "User registration details",
+            "required": true,
+            "schema": { "$ref": "#/definitions/RegisterUserRequest" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User registered successfully",
+            "schema": { "$ref": "#/definitions/RegisterUserResponse" }
+          },
+          "400": {
+            "description": "User already exists"
+          }
+        }
+      }
+    }
+  }
+}

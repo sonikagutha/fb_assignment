@@ -1,0 +1,2 @@
+# from fb_post.interactors.storage_interface.get_user_posts_storage import GetUserStorageInterface
+# class GetUserPosts
