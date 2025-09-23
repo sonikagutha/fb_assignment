@@ -15,10 +15,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-import fb_auth
-from fb_auth.controller.register_user_controller import RegisterController
+from django.urls import path, include
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('auth/register/', RegisterController.as_view(), name ="register"),
+    path('fb_post/', include("fb_post.urls")),
 ]
