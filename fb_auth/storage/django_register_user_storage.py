@@ -10,5 +10,8 @@ class RegisterUserStorage(RegisterUserStorageInterface):
             created_at = timezone.now()
         )
     def get_user_by_token(self, token):
-        user = FbUser.objects.get(access_token = token)
-        return user
+        try:
+            user = FbUser.objects.get(access_token = token)
+            return user
+        except FbUser.DoesNotExist:
+            return None

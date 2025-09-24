@@ -1,8 +1,7 @@
 from typing import List
 from fb_post.dtos import PostDTO, CommentDTO
 
-class GetUserPostPresenter:
-
+class GetUserPostsPresenter:
     def get_user_posts_response(self, posts: List[PostDTO]):
         return [self._post_to_dict(post) for post in posts]
 
@@ -36,7 +35,7 @@ class GetUserPostPresenter:
     def _reaction_to_dict(self, reaction):
         return {
             "count": reaction.count,
-            "type": reaction.types
+            "types": reaction.types
         }
 
     def _comment_to_dict(self, comment: CommentDTO):

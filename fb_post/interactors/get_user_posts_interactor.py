@@ -1,4 +1,3 @@
-
 from typing import List
 from fb_post.dtos import UserDTO, GroupDTO, ReactionDTO, CommentDTO, PostDTO
 from fb_post.models import Post, Comment, Group
@@ -16,10 +15,10 @@ class GetUserPostsInteractor:
         user_id: int,
         presenter: GetUserPostsPresenterInterface,
         post_offset: int = 0,
-        post_limit: int = 3,
+        post_limit: int = 10,
         comment_offset: int = 0,
-        comment_limit: int = 3,
-        replies_limit: int = 4
+        comment_limit: int = 10,
+        replies_limit: int = 5
     ):
         posts_dto = self.get_user_posts(
             user_id=user_id,
@@ -35,12 +34,18 @@ class GetUserPostsInteractor:
         self,
         user_id: int,
         post_offset: int = 0,
-        post_limit: int = 3,
+        post_limit: int = 10,
         comment_offset: int = 0,
-        comment_limit: int = 3,
-        replies_limit: int = 4
+        comment_limit: int = 10,
+        replies_limit: int = 5
     ) -> List[PostDTO]:
         posts = self.storage.get_posts_by_user_id(user_id, offset=post_offset, limit=post_limit)
+        # POST DTO
+        # Pick post ids
+        # send post ids to storage and get the comments -> CommentDTO
+        # get comment ids from comment dto and get the replies - CommentDTO
+
+
         return [self._get_post_dto(post, comment_offset, comment_limit, replies_limit) for post in posts]
 
     def _get_user_dto(self, user: FbUser) -> UserDTO:

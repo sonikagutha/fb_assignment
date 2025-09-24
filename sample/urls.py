@@ -19,5 +19,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('fb_post/', include("fb_post.urls")),
+    path('', include("fb_post.urls")),  # This makes /posts/user/ accessible directly
 ]

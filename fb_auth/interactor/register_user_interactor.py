@@ -1,5 +1,4 @@
 import uuid
-from django.utils import timezone
 def generate_token():
     return str(uuid.uuid4())
 class RegisterUserInteractor:
